@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables.
 
 ## Connection
 
@@ -88,6 +88,17 @@ The Phase 6 revision creates:
 - `employee_status_history`
 - `employee_notes`
 
+The Phase 7 revision creates:
+
+- `courses`
+- `course_modules`
+- `lessons`
+- `lesson_resources`
+- `course_batches`
+- `course_teachers`
+- `course_publish_history`
+- `course_prerequisites`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -123,3 +134,16 @@ PrepPeople tenant-owned tables use the same forced RLS policy. The key relations
 - `employee_notes.employee_id -> employees.id`.
 
 `departments`, `employees`, and `employee_documents` use `deleted_at` soft delete markers. Teacher assignment services validate that only employees with `employee_type=teacher` can receive teaching workload assignments.
+
+PrepLearn tenant-owned tables use the same forced RLS policy. The key relationships are:
+
+- `courses.tenant_id -> tenants.id`, tenant-unique `slug`, optional `created_by -> users.id`, and soft delete.
+- `course_modules.course_id -> courses.id`, tenant-scoped unique `(course_id, order_index)`, and soft delete.
+- `lessons.module_id -> course_modules.id`, tenant-scoped unique `(module_id, order_index)`, JSON `content`, JSON `completion_rule`, and soft delete.
+- `lesson_resources.lesson_id -> lessons.id`, optional future-compatible `content_asset_id`, JSON `metadata`, and soft delete.
+- `course_batches.course_id -> courses.id` and `batch_id -> batches.id`, unique per course/batch.
+- `course_teachers.course_id -> courses.id` and `teacher_id -> employees.id`, unique per course/teacher.
+- `course_publish_history.course_id -> courses.id`, status transition values, `published_by` UUID, and notes.
+- `course_prerequisites.course_id -> courses.id` and `prerequisite_course_id -> courses.id`.
+
+PrepLearn services validate cross-module ownership in the application layer before writing assignment rows. Course publishing requires at least one active module and at least one active lesson in every module.

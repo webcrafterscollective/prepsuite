@@ -1,1 +1,1 @@
-"""PrepLearn module placeholder."""
+"""PrepLearn bounded context."""

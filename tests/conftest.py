@@ -24,6 +24,14 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "course_prerequisites",
+    "course_publish_history",
+    "course_teachers",
+    "course_batches",
+    "lesson_resources",
+    "lessons",
+    "course_modules",
+    "courses",
     "employee_status_history",
     "employee_documents",
     "employee_notes",

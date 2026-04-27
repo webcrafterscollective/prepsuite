@@ -68,6 +68,17 @@ Phase 6 adds PrepPeople tests for:
 - Teacher assignment creation, teacher workload summary, and non-teacher assignment rejection.
 - Disabled app rejection, permission denial for users without a role, and cross-tenant employee isolation.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-6 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 7 adds PrepLearn tests for:
+
+- Course creation, tenant-unique slug conflict handling, list search, and draft filtering.
+- Publish requirement failures for empty courses and modules without lessons.
+- Module and lesson creation with automatic ordering.
+- Curriculum reorder behavior for modules and lessons.
+- Course assignment to PrepStudents batches and PrepPeople teachers.
+- Publish, archive, and archived-publish rejection workflows.
+- Student-facing outline response.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant course isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-7 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

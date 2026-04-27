@@ -120,6 +120,28 @@ All PrepPeople endpoints require the `preppeople` tenant app to be enabled. Dire
 | `POST` | `/api/v1/people/teacher-assignments` | Assign a teacher to a course UUID, batch, or both. |
 | `GET` | `/api/v1/people/teachers/{teacher_id}/workload` | Return active assignment, course, and batch counts for a teacher. |
 
+## PrepLearn Endpoints
+
+All PrepLearn endpoints require the `preplearn` tenant app to be enabled. Course reads require `preplearn.course.read`, course creation requires `preplearn.course.create`, course updates require `preplearn.course.update`, course deletion requires `preplearn.course.delete`, publishing requires `preplearn.course.publish`, and batch/teacher mappings require `preplearn.course.assign`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/learn/courses` | Cursor-paginated course list with `status`, `search`, and `sort` filters. |
+| `POST` | `/api/v1/learn/courses` | Create a draft course with tenant-unique slug. |
+| `GET` | `/api/v1/learn/courses/{course_id}` | Return course detail with modules, lessons, assignments, publish history, and prerequisites. |
+| `PATCH` | `/api/v1/learn/courses/{course_id}` | Update course metadata or archive/draft status. Publishing is handled by the publish endpoint. |
+| `DELETE` | `/api/v1/learn/courses/{course_id}` | Soft delete a course. |
+| `POST` | `/api/v1/learn/courses/{course_id}/publish` | Publish a course after validating module and lesson requirements. |
+| `POST` | `/api/v1/learn/courses/{course_id}/archive` | Archive a course. |
+| `POST` | `/api/v1/learn/courses/{course_id}/modules` | Create a module with automatic or explicit ordering. |
+| `PATCH` | `/api/v1/learn/modules/{module_id}` | Update module metadata or order index. |
+| `POST` | `/api/v1/learn/modules/{module_id}/lessons` | Create a lesson and optional lesson resources. |
+| `PATCH` | `/api/v1/learn/lessons/{lesson_id}` | Update lesson metadata, content JSON, preview flag, duration, or completion rule. |
+| `POST` | `/api/v1/learn/courses/{course_id}/reorder` | Reorder modules and lessons with uniqueness-safe two-step updates. |
+| `POST` | `/api/v1/learn/courses/{course_id}/assign-batch` | Assign a course to a PrepStudents batch in the same tenant. |
+| `POST` | `/api/v1/learn/courses/{course_id}/assign-teacher` | Assign a teacher employee to a course. |
+| `GET` | `/api/v1/learn/courses/{course_id}/outline` | Return a student-facing course outline view. |
+
 ## Error Shape
 
 ```json

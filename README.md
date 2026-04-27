@@ -1,6 +1,6 @@
 # PrepSuite Backend
 
-PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, and employee/teacher operations.
+PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, and PrepLearn curriculum management.
 
 ## Stack
 
@@ -55,9 +55,12 @@ Phase 5 adds PrepStudents: student records, guardians, batches, enrollments, not
 
 Phase 6 adds PrepPeople: departments, employees, employee profiles, staff document metadata, employee notes/status history, teacher assignments, teacher workload summaries, staff-user linking, app gates, RBAC, and RLS-backed tenant isolation.
 
+Phase 7 adds PrepLearn: courses, modules, lessons, lesson resources, course-batch mappings, course-teacher mappings, publish history, prerequisites, curriculum ordering, publishing rules, app gates, RBAC, and RLS-backed tenant isolation.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
 See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.
 See `docs/phase-04-prepsettings.md` for the settings data model, APIs, and app toggle rules.
 See `docs/phase-05-prepstudents.md` for the student lifecycle model, APIs, and test coverage.
 See `docs/phase-06-preppeople.md` for the employee/teacher operations model, APIs, and test coverage.
+See `docs/phase-07-preplearn.md` for the curriculum model, APIs, and test coverage.

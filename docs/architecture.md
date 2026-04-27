@@ -52,6 +52,14 @@ PrepSuite uses a modular monolith for the main backend. Each module is a bounded
 - `app/modules/people/router.py`: `/people/*` API surface protected by the `preppeople` feature gate and PrepPeople RBAC permissions.
 - `alembic/versions/202604280006_prep_people.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepPeople table.
 
+## Phase 7 Components
+
+- `app/modules/learn/models.py`: courses, modules, lessons, lesson resources, course-batch assignments, course-teacher assignments, publish history, and course prerequisites.
+- `app/modules/learn/repository.py`: tenant-scoped curriculum queries, cursor pagination, course detail eager loading, order-index helpers, and assignment lookups.
+- `app/modules/learn/service.py`: course lifecycle, module/lesson workflows, publishing rules, safe curriculum reordering, batch/teacher assignment validation, and course outline/detail aggregation.
+- `app/modules/learn/router.py`: `/learn/*` API surface protected by the `preplearn` feature gate and PrepLearn RBAC permissions.
+- `alembic/versions/202604280007_prep_learn.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepLearn table.
+
 ## Clean Architecture Rules
 
 Routers orchestrate HTTP concerns only. Services own business workflows. Repositories own persistence queries. Core dependencies expose infrastructure. Domain modules remain isolated and communicate through explicit service calls or events.
@@ -65,3 +73,5 @@ PrepSettings reuses the tenancy-owned `tenant_settings`, `tenant_branding`, `ten
 PrepStudents keeps route handlers intentionally thin: routers inject tenant context, current principal, permissions, and tenant-scoped sessions; services enforce app workflow rules and publish domain events; repositories contain only query and persistence helpers. Course references remain UUID-only until PrepLearn lands, keeping Phase 5 decoupled from future curriculum tables.
 
 PrepPeople follows the same boundary. The service validates optional PrepAccess `user_id` links and optional PrepStudents `batch_id` links, while `course_id` remains UUID-only until PrepLearn lands. Teacher workload rules live in the service layer, not the router or repository.
+
+PrepLearn now owns course UUIDs and curriculum structure. PrepStudents and PrepPeople remain decoupled through explicit assignment tables: batch ownership is validated against PrepStudents, teacher ownership is validated against PrepPeople, and route handlers still never reach across bounded contexts directly. PrepLearn service methods assemble read DTOs before committing when PostgreSQL RLS transaction-local tenant settings would otherwise be cleared.
