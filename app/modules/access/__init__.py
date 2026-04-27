@@ -1,1 +1,1 @@
-"""PrepAccess module placeholder."""
+"""PrepAccess authentication, IAM, and RBAC module."""

@@ -1,6 +1,6 @@
 # PrepSuite Backend
 
-PrepSuite is a production-grade, multi-tenant learning management SaaS backend. This repository starts with Phase 1: the backend bootstrap, service shell, local infrastructure, testing harness, and documentation baseline.
+PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, and PrepAccess authentication/RBAC foundation.
 
 ## Stack
 
@@ -47,5 +47,8 @@ Phase 1 establishes the clean architecture skeleton, async database setup, Alemb
 
 Phase 2 adds the multi-tenancy foundation: tenant records, tenant domains, app catalog, tenant app subscriptions, tenant settings, tenant branding, tenant users, PostgreSQL RLS policies, tenant resolution, and tenant-scoped sessions.
 
+Phase 3 adds PrepAccess: institution-admin registration, Argon2 password hashing, RS256 JWT access tokens, refresh token rotation/reuse detection, login sessions/history, password resets, invitations, roles, permissions, and permission dependencies.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
+See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.

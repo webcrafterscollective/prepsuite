@@ -8,6 +8,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+import app.modules.access.models  # noqa: F401
 import app.modules.tenancy.models  # noqa: F401
 from alembic import context
 from app.shared.models import Base

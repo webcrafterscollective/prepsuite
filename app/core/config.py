@@ -47,6 +47,17 @@ class Settings(BaseSettings):
     request_id_header: str = "X-Request-ID"
     readiness_timeout_seconds: float = 2.0
 
+    jwt_issuer: str = "prepsuite"
+    jwt_audience: str = "prepsuite-api"
+    jwt_private_key_pem: str | None = None
+    jwt_public_key_pem: str | None = None
+    access_token_ttl_minutes: int = 15
+    refresh_token_ttl_days: int = 30
+    password_reset_token_ttl_minutes: int = 30
+    invitation_token_ttl_days: int = 7
+    login_rate_limit_attempts: int = 5
+    login_rate_limit_window_seconds: int = 300
+
     @property
     def resolved_celery_broker_url(self) -> str:
         return self.celery_broker_url or self.redis_url

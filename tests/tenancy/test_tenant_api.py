@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import uuid
-
 from httpx import AsyncClient
 
 
@@ -63,12 +61,18 @@ async def test_tenant_context_resolves_by_header_slug_domain_subdomain_and_user(
     assert by_subdomain.status_code == 200
     assert by_subdomain.json()["tenant_id"] == tenant_id
 
-    user_id = str(uuid.uuid4())
-    add_user = await tenancy_client.post(
-        f"/api/v1/platform/tenants/{tenant_id}/users",
-        json={"user_id": user_id, "status": "active", "is_primary_admin": True},
+    register = await tenancy_client.post(
+        "/api/v1/access/register-institution-admin",
+        json={
+            "tenant_id": tenant_id,
+            "email": "admin@academy.example.com",
+            "password": "correct-horse-battery",
+            "first_name": "Ada",
+            "last_name": "Admin",
+        },
     )
-    assert add_user.status_code == 201, add_user.text
+    assert register.status_code == 201, register.text
+    user_id = register.json()["user"]["id"]
 
     by_user = await tenancy_client.get("/api/v1/tenant/current", headers={"X-User-ID": user_id})
     assert by_user.status_code == 200

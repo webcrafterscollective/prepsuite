@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
 from app.core.exceptions import PrepSuiteError
+from app.core.security import decode_access_token, get_bearer_token
 from app.core.tenant_context import (
     TenantContext,
     require_resolved_tenant,
@@ -58,8 +59,16 @@ async def get_tenant_context(
     session: DbSessionDep,
 ) -> TenantContext:
     host = get_request_host(request)
+    token = get_bearer_token(request.headers.get("Authorization"))
+    token_payload = decode_access_token(token) if token else {}
+    token_tenant_id = token_payload.get("tid")
+    token_user_id = token_payload.get("sub")
     tenant_id = parse_uuid_header(request.headers.get("X-Tenant-ID"), "X-Tenant-ID")
     user_id = parse_uuid_header(request.headers.get("X-User-ID"), "X-User-ID")
+    if tenant_id is None and isinstance(token_tenant_id, str):
+        tenant_id = parse_uuid_header(token_tenant_id, "token.tid")
+    if user_id is None and isinstance(token_user_id, str):
+        user_id = parse_uuid_header(token_user_id, "token.sub")
     if user_id is not None:
         await set_current_user_in_session(session, user_id)
     slug = request.headers.get("X-Tenant-Slug")

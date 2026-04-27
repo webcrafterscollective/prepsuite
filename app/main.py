@@ -13,6 +13,7 @@ from app.core.config import Settings, get_settings
 from app.core.database import check_database_ready, dispose_engine
 from app.core.exceptions import ErrorResponse, PrepSuiteError, install_exception_handlers
 from app.core.logging import RequestIDMiddleware, StructuredAccessLogMiddleware, configure_logging
+from app.modules.access.router import router as access_router
 from app.modules.tenancy.router import platform_router, tenant_router
 
 ReadinessChecker = Callable[[], Awaitable[dict[str, bool]]]
@@ -88,6 +89,7 @@ def create_app(
         return {"status": "ready", "checks": checks}
 
     app.include_router(router)
+    app.include_router(access_router, prefix=current_settings.api_v1_prefix)
     app.include_router(platform_router, prefix=current_settings.api_v1_prefix)
     app.include_router(tenant_router, prefix=current_settings.api_v1_prefix)
     return app
