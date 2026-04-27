@@ -24,6 +24,13 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "employee_status_history",
+    "employee_documents",
+    "employee_notes",
+    "teacher_assignments",
+    "employee_profiles",
+    "employees",
+    "departments",
     "student_status_history",
     "student_documents",
     "student_notes",

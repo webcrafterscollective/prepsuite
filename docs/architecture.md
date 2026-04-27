@@ -44,6 +44,14 @@ PrepSuite uses a modular monolith for the main backend. Each module is a bounded
 - `app/modules/students/router.py`: `/students/*` and `/batches/*` API surface protected by the `prepstudents` feature gate and PrepStudents RBAC permissions.
 - `alembic/versions/202604280005_prep_students.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepStudents table.
 
+## Phase 6 Components
+
+- `app/modules/people/models.py`: departments, employees, employee profiles, employee documents, notes, status history, and teacher assignments.
+- `app/modules/people/repository.py`: tenant-scoped employee directory queries, cursor pagination, department lookup, profile eager loading, and teacher assignment summaries.
+- `app/modules/people/service.py`: department creation, employee lifecycle, staff-user linking, profile upsert, status history, teacher-only assignment validation, workload aggregation, and employee profile/timeline aggregation.
+- `app/modules/people/router.py`: `/people/*` API surface protected by the `preppeople` feature gate and PrepPeople RBAC permissions.
+- `alembic/versions/202604280006_prep_people.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepPeople table.
+
 ## Clean Architecture Rules
 
 Routers orchestrate HTTP concerns only. Services own business workflows. Repositories own persistence queries. Core dependencies expose infrastructure. Domain modules remain isolated and communicate through explicit service calls or events.
@@ -55,3 +63,5 @@ PrepAccess follows the same boundary rule: routers never inspect password hashes
 PrepSettings reuses the tenancy-owned `tenant_settings`, `tenant_branding`, `tenant_apps`, and `app_catalog` models where those are already the source of truth, while keeping module-specific tables in the settings bounded context.
 
 PrepStudents keeps route handlers intentionally thin: routers inject tenant context, current principal, permissions, and tenant-scoped sessions; services enforce app workflow rules and publish domain events; repositories contain only query and persistence helpers. Course references remain UUID-only until PrepLearn lands, keeping Phase 5 decoupled from future curriculum tables.
+
+PrepPeople follows the same boundary. The service validates optional PrepAccess `user_id` links and optional PrepStudents `batch_id` links, while `course_id` remains UUID-only until PrepLearn lands. Teacher workload rules live in the service layer, not the router or repository.

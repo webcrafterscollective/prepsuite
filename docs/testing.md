@@ -59,6 +59,15 @@ Phase 5 adds PrepStudents tests for:
 - Batch creation, capacity enforcement, membership removal, and filtered student listing.
 - Disabled app rejection, permission denial for users without a role, and cross-tenant student isolation.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-5 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 6 adds PrepPeople tests for:
+
+- Department creation and employee directory filtering.
+- Employee creation with optional PrepAccess user link and profile data.
+- Duplicate employee-code conflict handling.
+- Employee status updates, profile upsert, notes, document metadata, timeline, and aggregate profile.
+- Teacher assignment creation, teacher workload summary, and non-teacher assignment rejection.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant employee isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-6 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

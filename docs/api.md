@@ -101,6 +101,25 @@ All PrepStudents endpoints require the `prepstudents` tenant app to be enabled. 
 | `POST` | `/api/v1/batches/{batch_id}/students` | Add or reactivate a student membership, enforcing capacity. |
 | `DELETE` | `/api/v1/batches/{batch_id}/students/{student_id}` | Mark an active batch membership as removed. |
 
+## PrepPeople Endpoints
+
+All PrepPeople endpoints require the `preppeople` tenant app to be enabled. Directory/profile/workload reads require `preppeople.employee.read`, employee creation requires `preppeople.employee.create`, employee mutations require `preppeople.employee.update`, department creation requires `preppeople.department.manage`, and teacher assignment creation requires `preppeople.teacher_assignment.manage`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/people/employees` | Cursor-paginated employee directory with `status`, `employee_type`, `department_id`, `search`, and `sort`. |
+| `POST` | `/api/v1/people/employees` | Create an employee, optional profile, optional department link, and optional PrepAccess user link. |
+| `GET` | `/api/v1/people/employees/{employee_id}` | Fetch one active, non-deleted employee. |
+| `PATCH` | `/api/v1/people/employees/{employee_id}` | Update employee fields, linked user, department, status, and profile. |
+| `GET` | `/api/v1/people/employees/{employee_id}/profile` | Return the employee profile aggregate. |
+| `GET` | `/api/v1/people/employees/{employee_id}/timeline` | Return employee activity from status, assignment, note, and document records. |
+| `POST` | `/api/v1/people/employees/{employee_id}/notes` | Add an internal, manager, or HR note. |
+| `POST` | `/api/v1/people/employees/{employee_id}/documents` | Add document metadata for externally stored employee files. |
+| `GET` | `/api/v1/people/departments` | List departments with optional `status` and `search`. |
+| `POST` | `/api/v1/people/departments` | Create a department. |
+| `POST` | `/api/v1/people/teacher-assignments` | Assign a teacher to a course UUID, batch, or both. |
+| `GET` | `/api/v1/people/teachers/{teacher_id}/workload` | Return active assignment, course, and batch counts for a teacher. |
+
 ## Error Shape
 
 ```json

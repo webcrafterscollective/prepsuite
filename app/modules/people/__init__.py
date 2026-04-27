@@ -1,1 +1,1 @@
-"""PrepPeople module placeholder."""
+"""PrepPeople bounded context."""

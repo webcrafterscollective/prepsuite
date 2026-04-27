@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables.
 
 ## Connection
 
@@ -78,6 +78,16 @@ The Phase 5 revision creates:
 - `student_documents`
 - `student_status_history`
 
+The Phase 6 revision creates:
+
+- `departments`
+- `employees`
+- `employee_profiles`
+- `employee_documents`
+- `teacher_assignments`
+- `employee_status_history`
+- `employee_notes`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -101,3 +111,15 @@ PrepStudents tenant-owned tables also use the same forced RLS policy. The key re
 - `student_notes`, `student_documents`, and `student_status_history` belong to `students`.
 
 `students`, `guardians`, `batches`, and `student_documents` use `deleted_at` soft delete markers. Batch membership removal is represented by `batch_students.status=removed` with `left_at`.
+
+PrepPeople tenant-owned tables use the same forced RLS policy. The key relationships are:
+
+- `departments.tenant_id -> tenants.id` and tenant-unique `code`.
+- `employees.tenant_id -> tenants.id`, tenant-unique `employee_code`, optional `user_id -> users.id`, and optional `department_id -> departments.id`.
+- `employee_profiles.employee_id -> employees.id`.
+- `employee_documents.employee_id -> employees.id`.
+- `teacher_assignments.teacher_id -> employees.id`, optional `batch_id -> batches.id`, and future-compatible `course_id` UUID.
+- `employee_status_history.employee_id -> employees.id`.
+- `employee_notes.employee_id -> employees.id`.
+
+`departments`, `employees`, and `employee_documents` use `deleted_at` soft delete markers. Teacher assignment services validate that only employees with `employee_type=teacher` can receive teaching workload assignments.
