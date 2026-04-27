@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: prepsuite-postgres
+    environment:
+      POSTGRES_USER: prepsuite
+      POSTGRES_PASSWORD: prepsuite
+      POSTGRES_DB: prepsuite
+    ports:
+      - "5432:5432"
+    volumes:
+      - prepsuite_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prepsuite -d prepsuite"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  redis:
+    image: redis:7-alpine
+    container_name: prepsuite-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - prepsuite_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 3s
+
+  api:
+    build:
+      context: .
+    container_name: prepsuite-api
+    environment:
+      PREPSUITE_ENVIRONMENT: local
+      PREPSUITE_DEBUG: "true"
+      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite:prepsuite@postgres:5432/prepsuite
+      PREPSUITE_REDIS_URL: redis://redis:6379/0
+      PREPSUITE_TRUSTED_HOSTS: '["localhost","127.0.0.1","0.0.0.0","prepsuite-api"]'
+      PREPSUITE_CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173"]'
+      PREPSUITE_LOG_LEVEL: INFO
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health', timeout=2)\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  worker:
+    build:
+      context: .
+    container_name: prepsuite-worker
+    command: ["uv", "run", "celery", "-A", "app.worker.celery_app", "worker", "--loglevel=INFO"]
+    environment:
+      PREPSUITE_ENVIRONMENT: local
+      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite:prepsuite@postgres:5432/prepsuite
+      PREPSUITE_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  beat:
+    build:
+      context: .
+    container_name: prepsuite-beat
+    command: ["uv", "run", "celery", "-A", "app.worker.celery_app", "beat", "--loglevel=INFO"]
+    environment:
+      PREPSUITE_ENVIRONMENT: local
+      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite:prepsuite@postgres:5432/prepsuite
+      PREPSUITE_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  prepsuite_postgres_data:
+  prepsuite_redis_data:
