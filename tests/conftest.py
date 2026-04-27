@@ -24,6 +24,15 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "student_status_history",
+    "student_documents",
+    "student_notes",
+    "student_enrollments",
+    "student_guardians",
+    "guardians",
+    "batch_students",
+    "batches",
+    "students",
     "invitation_tokens",
     "password_reset_tokens",
     "login_history",

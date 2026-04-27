@@ -15,6 +15,7 @@ from app.core.exceptions import ErrorResponse, PrepSuiteError, install_exception
 from app.core.logging import RequestIDMiddleware, StructuredAccessLogMiddleware, configure_logging
 from app.modules.access.router import router as access_router
 from app.modules.settings.router import router as settings_router
+from app.modules.students.router import router as students_router
 from app.modules.tenancy.router import platform_router, tenant_router
 
 ReadinessChecker = Callable[[], Awaitable[dict[str, bool]]]
@@ -92,6 +93,7 @@ def create_app(
     app.include_router(router)
     app.include_router(access_router, prefix=current_settings.api_v1_prefix)
     app.include_router(settings_router, prefix=current_settings.api_v1_prefix)
+    app.include_router(students_router, prefix=current_settings.api_v1_prefix)
     app.include_router(platform_router, prefix=current_settings.api_v1_prefix)
     app.include_router(tenant_router, prefix=current_settings.api_v1_prefix)
     return app

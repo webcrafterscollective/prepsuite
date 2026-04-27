@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables.
 
 ## Connection
 
@@ -66,6 +66,18 @@ The Phase 4 revision creates:
 - `tenant_integrations`
 - `tenant_app_settings`
 
+The Phase 5 revision creates:
+
+- `students`
+- `guardians`
+- `student_guardians`
+- `batches`
+- `batch_students`
+- `student_enrollments`
+- `student_notes`
+- `student_documents`
+- `student_status_history`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -77,3 +89,15 @@ tenant_id = NULLIF(current_setting('app.current_tenant_id', true), '')::uuid
 PrepAccess tenant-owned auth tables use the same tenant setting, with self-access policies where token/session lookup needs `app.current_user_id`. Refresh, reset, and invitation tokens are stored only as SHA-256 hashes; their raw values include a tenant/user scope prefix so the application can set RLS context before querying the hash.
 
 PrepSettings tenant-owned tables use the same RLS policy and are accessed only through tenant-scoped sessions. `tenant_app_settings.app_code` references the global `app_catalog`, while subscription state remains owned by `tenant_apps`.
+
+PrepStudents tenant-owned tables also use the same forced RLS policy. The key relationships are:
+
+- `students.tenant_id -> tenants.id` and tenant-unique `admission_no`.
+- `guardians.tenant_id -> tenants.id`.
+- `student_guardians.student_id -> students.id` and `guardian_id -> guardians.id`.
+- `batches.tenant_id -> tenants.id` and tenant-unique `code`.
+- `batch_students.batch_id -> batches.id` and `student_id -> students.id`.
+- `student_enrollments.student_id -> students.id`, optional `batch_id -> batches.id`, and future-compatible `course_id` UUID.
+- `student_notes`, `student_documents`, and `student_status_history` belong to `students`.
+
+`students`, `guardians`, `batches`, and `student_documents` use `deleted_at` soft delete markers. Batch membership removal is represented by `batch_students.status=removed` with `left_at`.

@@ -50,6 +50,15 @@ Phase 4 adds PrepSettings tests for:
 - Academic-year current flag exclusivity.
 - Permission denial for users without `prepsettings.settings.manage`.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-4 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 5 adds PrepStudents tests for:
+
+- Student create/list/search/update/profile/timeline/soft delete.
+- Duplicate tenant admission numbers.
+- Guardian, note, document metadata, and enrollment creation.
+- Bulk import partial success with duplicate payload reporting.
+- Batch creation, capacity enforcement, membership removal, and filtered student listing.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant student isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-5 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

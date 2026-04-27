@@ -36,6 +36,14 @@ PrepSuite uses a modular monolith for the main backend. Each module is a bounded
 - `app/modules/settings/router.py`: `/settings/*` API surface protected by `prepsettings.settings.manage`.
 - `app/core/events.py`: in-process event dispatcher singleton used by PrepSettings audit events until the transactional outbox lands.
 
+## Phase 5 Components
+
+- `app/modules/students/models.py`: students, guardians, student links, batches, batch memberships, enrollments, notes, documents, and status history.
+- `app/modules/students/repository.py`: tenant-scoped SQLAlchemy queries, cursor pagination, batch capacity counts, and profile eager loading.
+- `app/modules/students/service.py`: student lifecycle, bulk import, soft delete, status history, guardian/document/note/enrollment workflows, batch assignment, and student profile/timeline aggregation.
+- `app/modules/students/router.py`: `/students/*` and `/batches/*` API surface protected by the `prepstudents` feature gate and PrepStudents RBAC permissions.
+- `alembic/versions/202604280005_prep_students.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepStudents table.
+
 ## Clean Architecture Rules
 
 Routers orchestrate HTTP concerns only. Services own business workflows. Repositories own persistence queries. Core dependencies expose infrastructure. Domain modules remain isolated and communicate through explicit service calls or events.
@@ -45,3 +53,5 @@ The database role split is part of the architecture: Alembic migrations run as a
 PrepAccess follows the same boundary rule: routers never inspect password hashes, token families, or role bindings directly; services enforce workflows and repositories keep SQLAlchemy queries only.
 
 PrepSettings reuses the tenancy-owned `tenant_settings`, `tenant_branding`, `tenant_apps`, and `app_catalog` models where those are already the source of truth, while keeping module-specific tables in the settings bounded context.
+
+PrepStudents keeps route handlers intentionally thin: routers inject tenant context, current principal, permissions, and tenant-scoped sessions; services enforce app workflow rules and publish domain events; repositories contain only query and persistence helpers. Course references remain UUID-only until PrepLearn lands, keeping Phase 5 decoupled from future curriculum tables.

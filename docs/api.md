@@ -76,6 +76,31 @@ All PrepSettings endpoints require `prepsettings.settings.manage`.
 
 Tenant app toggles require an existing `tenant_apps` subscription row. Locked apps cannot be toggled by tenant admins. Enabling is allowed only for active or trial subscriptions that have not expired.
 
+## PrepStudents Endpoints
+
+All PrepStudents endpoints require the `prepstudents` tenant app to be enabled. Student read endpoints require `prepstudents.student.read`, create requires `prepstudents.student.create`, import requires `prepstudents.student.import`, student mutations require `prepstudents.student.update` or `prepstudents.student.delete`, and batch workflows require `prepstudents.batch.manage`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/students` | Cursor-paginated student list with `status`, `search`, `batch_id`, and `sort` filters. |
+| `POST` | `/api/v1/students` | Create a student with tenant-unique `admission_no`. |
+| `GET` | `/api/v1/students/{student_id}` | Fetch one active, non-deleted student. |
+| `PATCH` | `/api/v1/students/{student_id}` | Update student identity, contact, demographics, or status. |
+| `DELETE` | `/api/v1/students/{student_id}` | Soft delete a student. |
+| `POST` | `/api/v1/students/bulk-import` | Import up to 500 students and return per-row duplicate errors. |
+| `GET` | `/api/v1/students/{student_id}/timeline` | Return a student activity timeline from status, batch, enrollment, and note records. |
+| `GET` | `/api/v1/students/{student_id}/profile` | Return the student profile aggregate. |
+| `POST` | `/api/v1/students/{student_id}/guardians` | Add a guardian and student-guardian link. |
+| `POST` | `/api/v1/students/{student_id}/notes` | Add an internal/teacher/guardian-visible note. |
+| `POST` | `/api/v1/students/{student_id}/documents` | Add document metadata for externally stored files. |
+| `POST` | `/api/v1/students/{student_id}/enrollments` | Enroll a student into a course UUID, optionally linked to a batch. |
+| `GET` | `/api/v1/batches` | List batches with optional `status` and `search`. |
+| `POST` | `/api/v1/batches` | Create a batch with optional capacity and course UUID. |
+| `GET` | `/api/v1/batches/{batch_id}` | Fetch one batch. |
+| `PATCH` | `/api/v1/batches/{batch_id}` | Update a batch while preserving capacity constraints. |
+| `POST` | `/api/v1/batches/{batch_id}/students` | Add or reactivate a student membership, enforcing capacity. |
+| `DELETE` | `/api/v1/batches/{batch_id}/students/{student_id}` | Mark an active batch membership as removed. |
+
 ## Error Shape
 
 ```json
