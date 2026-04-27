@@ -40,3 +40,7 @@ class TimestampMixin:
         onupdate=func.now(),
         nullable=False,
     )
+
+
+class TenantOwnedMixin:
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)

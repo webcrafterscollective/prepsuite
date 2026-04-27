@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     debug: bool = True
     api_v1_prefix: str = "/api/v1"
 
-    database_url: str = "postgresql+asyncpg://prepsuite:prepsuite@localhost:5432/prepsuite"
+    database_url: str = "postgresql+asyncpg://prepsuite_app:prepsuite_app@localhost:5432/prepsuite"
     database_pool_size: int = 5
     database_max_overflow: int = 10
     database_pool_timeout_seconds: int = 30

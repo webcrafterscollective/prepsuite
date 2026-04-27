@@ -3,15 +3,16 @@ services:
     image: postgres:16-alpine
     container_name: prepsuite-postgres
     environment:
-      POSTGRES_USER: prepsuite
-      POSTGRES_PASSWORD: prepsuite
+      POSTGRES_USER: prepsuite_owner
+      POSTGRES_PASSWORD: prepsuite_owner
       POSTGRES_DB: prepsuite
     ports:
       - "5432:5432"
     volumes:
       - prepsuite_postgres_data:/var/lib/postgresql/data
+      - ./scripts/postgres/001-create-app-role.sql:/docker-entrypoint-initdb.d/001-create-app-role.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U prepsuite -d prepsuite"]
+      test: ["CMD-SHELL", "pg_isready -U prepsuite_owner -d prepsuite"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -39,7 +40,8 @@ services:
     environment:
       PREPSUITE_ENVIRONMENT: local
       PREPSUITE_DEBUG: "true"
-      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite:prepsuite@postgres:5432/prepsuite
+      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite_app:prepsuite_app@postgres:5432/prepsuite
+      PREPSUITE_MIGRATION_DATABASE_URL: postgresql+asyncpg://prepsuite_owner:prepsuite_owner@postgres:5432/prepsuite
       PREPSUITE_REDIS_URL: redis://redis:6379/0
       PREPSUITE_TRUSTED_HOSTS: '["localhost","127.0.0.1","0.0.0.0","prepsuite-api"]'
       PREPSUITE_CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173"]'
@@ -69,7 +71,8 @@ services:
     command: ["uv", "run", "celery", "-A", "app.worker.celery_app", "worker", "--loglevel=INFO"]
     environment:
       PREPSUITE_ENVIRONMENT: local
-      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite:prepsuite@postgres:5432/prepsuite
+      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite_app:prepsuite_app@postgres:5432/prepsuite
+      PREPSUITE_MIGRATION_DATABASE_URL: postgresql+asyncpg://prepsuite_owner:prepsuite_owner@postgres:5432/prepsuite
       PREPSUITE_REDIS_URL: redis://redis:6379/0
     depends_on:
       postgres:
@@ -84,7 +87,8 @@ services:
     command: ["uv", "run", "celery", "-A", "app.worker.celery_app", "beat", "--loglevel=INFO"]
     environment:
       PREPSUITE_ENVIRONMENT: local
-      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite:prepsuite@postgres:5432/prepsuite
+      PREPSUITE_DATABASE_URL: postgresql+asyncpg://prepsuite_app:prepsuite_app@postgres:5432/prepsuite
+      PREPSUITE_MIGRATION_DATABASE_URL: postgresql+asyncpg://prepsuite_owner:prepsuite_owner@postgres:5432/prepsuite
       PREPSUITE_REDIS_URL: redis://redis:6379/0
     depends_on:
       postgres:

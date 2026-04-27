@@ -1,4 +1,4 @@
-.PHONY: install lint format typecheck test check migrate up down logs run worker beat
+.PHONY: install lint format typecheck test check migrate seed up down logs run worker beat
 
 install:
 	uv sync --all-groups
@@ -19,6 +19,9 @@ check: lint typecheck test
 
 migrate:
 	uv run alembic upgrade head
+
+seed:
+	uv run python -m scripts.seed_app_catalog
 
 up:
 	docker compose up --build

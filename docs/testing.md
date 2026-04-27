@@ -22,4 +22,13 @@ Bootstrap tests verify:
 - Settings defaults.
 - Async SQLAlchemy engine and session factory construction.
 
-Future phases will add Testcontainers-backed PostgreSQL/Redis integration tests for tenant isolation, RLS, permissions, feature gates, workers, and live flows.
+Phase 2 adds Testcontainers-backed PostgreSQL tests for:
+
+- Tenant context resolution by header, slug, domain, subdomain, and user membership.
+- Tenant settings and app subscription scoping.
+- Standard tenant-required errors.
+- PostgreSQL RLS hiding rows without `app.current_tenant_id`.
+- PostgreSQL RLS limiting reads to the current tenant.
+- PostgreSQL RLS blocking writes for another tenant.
+
+Future phases will extend this setup for permissions, feature gates, workers, and live flows.

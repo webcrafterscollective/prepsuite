@@ -8,6 +8,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+import app.modules.tenancy.models  # noqa: F401
 from alembic import context
 from app.shared.models import Base
 
@@ -20,7 +21,11 @@ target_metadata = Base.metadata
 
 
 def get_database_url() -> str:
-    return os.getenv("PREPSUITE_DATABASE_URL") or config.get_main_option("sqlalchemy.url")
+    return (
+        os.getenv("PREPSUITE_MIGRATION_DATABASE_URL")
+        or os.getenv("PREPSUITE_DATABASE_URL")
+        or config.get_main_option("sqlalchemy.url")
+    )
 
 
 def run_migrations_offline() -> None:

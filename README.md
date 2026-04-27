@@ -41,8 +41,11 @@ make migrate
 make check
 ```
 
-## Phase 1 Status
+## Phase Status
 
 Phase 1 establishes the clean architecture skeleton, async database setup, Alembic, Redis readiness checks, Celery shell, Docker services, structured logging, request IDs, CORS, error handling, and baseline tests.
 
+Phase 2 adds the multi-tenancy foundation: tenant records, tenant domains, app catalog, tenant app subscriptions, tenant settings, tenant branding, tenant users, PostgreSQL RLS policies, tenant resolution, and tenant-scoped sessions.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
+See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
