@@ -42,6 +42,14 @@ Phase 3 adds PrepAccess tests for:
 - Password reset confirmation.
 - Login rate limiting.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-3 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 4 adds PrepSettings tests for:
+
+- General settings, branding, grading rules, and attendance rules.
+- Audit event emission for settings writes.
+- App toggles respecting subscription state and locked apps.
+- Academic-year current flag exclusivity.
+- Permission denial for users without `prepsettings.settings.manage`.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-4 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

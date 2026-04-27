@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables.
 
 ## Connection
 
@@ -58,6 +58,14 @@ The Phase 3 revision creates:
 
 It also adds `tenant_users.user_id -> users.id`.
 
+The Phase 4 revision creates:
+
+- `tenant_academic_years`
+- `tenant_grading_rules`
+- `tenant_attendance_rules`
+- `tenant_integrations`
+- `tenant_app_settings`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -67,3 +75,5 @@ tenant_id = NULLIF(current_setting('app.current_tenant_id', true), '')::uuid
 `tenant_domains` allows public SELECT for domain resolution but enforces tenant-scoped writes. `tenant_users` adds a self-resolution SELECT policy based on `app.current_user_id`.
 
 PrepAccess tenant-owned auth tables use the same tenant setting, with self-access policies where token/session lookup needs `app.current_user_id`. Refresh, reset, and invitation tokens are stored only as SHA-256 hashes; their raw values include a tenant/user scope prefix so the application can set RLS context before querying the hash.
+
+PrepSettings tenant-owned tables use the same RLS policy and are accessed only through tenant-scoped sessions. `tenant_app_settings.app_code` references the global `app_catalog`, while subscription state remains owned by `tenant_apps`.

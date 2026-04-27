@@ -29,6 +29,13 @@ PrepSuite uses a modular monolith for the main backend. Each module is a bounded
 - `app/core/security.py`: Argon2 password hashing, RS256 access token creation/validation, refresh-token hashing helpers, and ephemeral local keys when env keys are absent.
 - `app/core/permissions.py`: `require_permission("app.resource.action")` dependency used by routers.
 
+## Phase 4 Components
+
+- `app/modules/settings/models.py`: academic years, grading rules, attendance rules, integrations, and per-app tenant settings.
+- `app/modules/settings/service.py`: general/branding updates, subscription-aware app toggles, academic year workflows, default grading/attendance rules, and audit event emission.
+- `app/modules/settings/router.py`: `/settings/*` API surface protected by `prepsettings.settings.manage`.
+- `app/core/events.py`: in-process event dispatcher singleton used by PrepSettings audit events until the transactional outbox lands.
+
 ## Clean Architecture Rules
 
 Routers orchestrate HTTP concerns only. Services own business workflows. Repositories own persistence queries. Core dependencies expose infrastructure. Domain modules remain isolated and communicate through explicit service calls or events.
@@ -36,3 +43,5 @@ Routers orchestrate HTTP concerns only. Services own business workflows. Reposit
 The database role split is part of the architecture: Alembic migrations run as an owner role, while the API connects as a non-superuser app role so PostgreSQL RLS is actually enforced.
 
 PrepAccess follows the same boundary rule: routers never inspect password hashes, token families, or role bindings directly; services enforce workflows and repositories keep SQLAlchemy queries only.
+
+PrepSettings reuses the tenancy-owned `tenant_settings`, `tenant_branding`, `tenant_apps`, and `app_catalog` models where those are already the source of truth, while keeping module-specific tables in the settings bounded context.

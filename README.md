@@ -49,6 +49,9 @@ Phase 2 adds the multi-tenancy foundation: tenant records, tenant domains, app c
 
 Phase 3 adds PrepAccess: institution-admin registration, Argon2 password hashing, RS256 JWT access tokens, refresh token rotation/reuse detection, login sessions/history, password resets, invitations, roles, permissions, and permission dependencies.
 
+Phase 4 adds PrepSettings: tenant general settings, branding, subscription-aware app toggles, academic years, grading rules, attendance rules, integration/app settings tables, and settings audit events.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
 See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.
+See `docs/phase-04-prepsettings.md` for the settings data model, APIs, and app toggle rules.

@@ -54,6 +54,28 @@ Tenant resolution supports `X-Tenant-ID`, `X-Tenant-Slug`, `X-Tenant-Domain`, ho
 
 Authenticated endpoints use `Authorization: Bearer <access_token>`. Access tokens are RS256 JWTs with `sub`, optional `tid`, `user_type`, `typ=access`, issuer, audience, expiry, and `jti`.
 
+## PrepSettings Endpoints
+
+All PrepSettings endpoints require `prepsettings.settings.manage`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/settings/general` | Fetch general tenant settings and notification preferences. |
+| `PATCH` | `/api/v1/settings/general` | Update general tenant settings. |
+| `GET` | `/api/v1/settings/branding` | Fetch tenant branding settings. |
+| `PATCH` | `/api/v1/settings/branding` | Update tenant branding settings. |
+| `GET` | `/api/v1/settings/apps` | List app catalog entries with tenant subscription/toggle state. |
+| `PATCH` | `/api/v1/settings/apps/{app_code}/toggle` | Enable or disable a subscribed tenant app. |
+| `GET` | `/api/v1/settings/academic-years` | List tenant academic years. |
+| `POST` | `/api/v1/settings/academic-years` | Create an academic year. |
+| `PATCH` | `/api/v1/settings/academic-years/{academic_year_id}` | Update an academic year. |
+| `GET` | `/api/v1/settings/grading-rules` | Fetch the default grading rule. |
+| `PATCH` | `/api/v1/settings/grading-rules` | Update the default grading rule. |
+| `GET` | `/api/v1/settings/attendance-rules` | Fetch the default attendance rule. |
+| `PATCH` | `/api/v1/settings/attendance-rules` | Update the default attendance rule. |
+
+Tenant app toggles require an existing `tenant_apps` subscription row. Locked apps cannot be toggled by tenant admins. Enabling is allowed only for active or trial subscriptions that have not expired.
+
 ## Error Shape
 
 ```json

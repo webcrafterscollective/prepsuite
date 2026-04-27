@@ -28,3 +28,6 @@ class EventDispatcher:
     async def publish(self, event: DomainEvent) -> None:
         for handler in self._handlers.get(event.event_type, []):
             await handler(event)
+
+
+event_dispatcher = EventDispatcher()
