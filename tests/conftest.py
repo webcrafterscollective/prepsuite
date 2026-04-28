@@ -24,6 +24,12 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "live_class_events",
+    "live_class_recordings",
+    "live_class_attendance_snapshots",
+    "live_class_invites",
+    "live_class_participants",
+    "live_classes",
     "attendance_correction_requests",
     "employee_attendance_records",
     "student_attendance_records",

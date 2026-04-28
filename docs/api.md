@@ -200,6 +200,24 @@ All PrepAttend endpoints require the `prepattend` tenant app to be enabled. Stud
 | `POST` | `/api/v1/attend/correction-requests` | Create a student or employee attendance correction request. |
 | `POST` | `/api/v1/attend/correction-requests/{correction_id}/approve` | Approve or reject a correction request and apply approved status changes. |
 
+## PrepLive Endpoints
+
+All PrepLive endpoints require the `preplive` tenant app to be enabled. Class reads require `preplive.class.read`, scheduling requires `preplive.class.schedule`, class state changes require `preplive.class.manage`, live-service validation requires `preplive.access.validate`, attendance sync requires `preplive.attendance.sync`, and recording metadata requires `preplive.recording.manage`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/live/classes` | Schedule a tenant-owned live class and generate a `https://live.prepsuite.in/{class_code}` link. |
+| `GET` | `/api/v1/live/classes` | Cursor-paginated live class list with status, batch, student, teacher, and date filters. |
+| `GET` | `/api/v1/live/classes/{live_class_id}` | Fetch class detail with participants, recordings, and events. |
+| `PATCH` | `/api/v1/live/classes/{live_class_id}` | Update a scheduled or open class with assignment validation. |
+| `POST` | `/api/v1/live/classes/{live_class_id}/cancel` | Cancel a scheduled/open/live class. |
+| `POST` | `/api/v1/live/classes/{live_class_id}/open` | Open a scheduled class for the live runtime. |
+| `POST` | `/api/v1/live/classes/{live_class_id}/end` | End a class and complete active participants. |
+| `GET` | `/api/v1/live/classes/by-code/{class_code}` | Resolve a public class code to tenant-scoped class detail. |
+| `POST` | `/api/v1/live/classes/{class_code}/validate-access` | Validate a student, employee, or admin participant for the standalone live service. |
+| `POST` | `/api/v1/live/classes/{live_class_id}/attendance-events` | Capture live participant joined/left events and optional attendance snapshots. |
+| `POST` | `/api/v1/live/classes/{live_class_id}/recordings` | Attach recording metadata for a completed or processing class. |
+
 ## Error Shape
 
 ```json

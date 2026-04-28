@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables. Phase 9 adds PrepAssess assessment and evaluation tables. Phase 10 adds PrepAttend attendance operation tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables. Phase 9 adds PrepAssess assessment and evaluation tables. Phase 10 adds PrepAttend attendance operation tables. Phase 11 adds PrepLive scheduling and live-service integration tables.
 
 ## Connection
 
@@ -129,6 +129,15 @@ The Phase 10 revision creates:
 - `attendance_correction_requests`
 - `attendance_policies`
 
+The Phase 11 revision creates:
+
+- `live_classes`
+- `live_class_participants`
+- `live_class_invites`
+- `live_class_attendance_snapshots`
+- `live_class_recordings`
+- `live_class_events`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -213,3 +222,14 @@ PrepAttend tenant-owned tables use the same forced RLS policy. The key relations
 - `attendance_policies.tenant_id -> tenants.id`, tenant-unique `code`, scope, minimum percentage, late/absent thresholds, JSON settings, status, default flag, and soft delete.
 
 PrepAttend services validate active student batch membership before marking student records, validate employee ownership before check-in/check-out, replay employee check-in idempotency keys, and apply approved corrections through explicit correction workflow records.
+
+PrepLive tenant-owned tables use the same forced RLS policy. The key relationships are:
+
+- `live_classes.tenant_id -> tenants.id`, optional `course_id -> courses.id`, `batch_id -> batches.id`, `instructor_id -> employees.id`, globally unique `class_code`, timing window, capacity, status, provider, public link, JSON settings, and creator UUID.
+- `live_class_participants.live_class_id -> live_classes.id`, optional `user_id`, optional `student_id -> students.id`, optional `employee_id -> employees.id`, participant role, join status, joined/left timestamps, and duration seconds.
+- `live_class_invites.live_class_id -> live_classes.id`, tenant/class/email unique guest invitation metadata for future invite flows.
+- `live_class_attendance_snapshots.live_class_id -> live_classes.id`, captured timestamp, participant count, and JSON payload from the live runtime.
+- `live_class_recordings.live_class_id -> live_classes.id`, provider/storage/playback metadata, duration, status, and JSON metadata.
+- `live_class_events.live_class_id -> live_classes.id`, optional `participant_id -> live_class_participants.id`, event type, occurred timestamp, and JSON payload.
+
+PrepLive services validate batch ownership, optional course-batch assignment, instructor assignment, join windows, participant role eligibility, capacity, and cross-tenant access before returning live-service access decisions.

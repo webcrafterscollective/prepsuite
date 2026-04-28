@@ -1,1 +1,1 @@
-"""PrepLive module placeholder."""
+"""PrepLive bounded context."""

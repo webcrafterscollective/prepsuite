@@ -1,6 +1,6 @@
 # PrepSuite Backend
 
-PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, PrepLearn curriculum management, PrepQuestion question-bank workflows, PrepAssess assessment/evaluation workflows, and PrepAttend attendance operations.
+PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, PrepLearn curriculum management, PrepQuestion question-bank workflows, PrepAssess assessment/evaluation workflows, PrepAttend attendance operations, and PrepLive main-backend scheduling/access validation.
 
 ## Stack
 
@@ -63,6 +63,8 @@ Phase 9 adds PrepAssess: assessments created from question sets, sections, asses
 
 Phase 10 adds PrepAttend: student attendance sessions and records, employee check-in/check-out, correction request approval, summaries, policies storage, app gates, RBAC, and RLS-backed tenant isolation.
 
+Phase 11 adds PrepLive main backend: live class scheduling, class-code link generation, batch/teacher validation, live-service access validation, capacity and join-window checks, attendance event capture, recording metadata, app gates, RBAC, and RLS-backed tenant isolation.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
 See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.
@@ -73,3 +75,4 @@ See `docs/phase-07-preplearn.md` for the curriculum model, APIs, and test covera
 See `docs/phase-08-prepquestion.md` for the question-bank model, APIs, and test coverage.
 See `docs/phase-09-prepassess.md` for the assessment model, APIs, and test coverage.
 See `docs/phase-10-prepattend.md` for the attendance model, APIs, and test coverage.
+See `docs/phase-11-preplive.md` for the live scheduling model, APIs, and test coverage.

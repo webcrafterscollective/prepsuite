@@ -108,6 +108,17 @@ Phase 10 adds PrepAttend tests for:
 - Employee check-in idempotency, check-out, summary counts, and work seconds.
 - Disabled app rejection, permission denial for users without a role, and cross-tenant attendance isolation.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-10 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 11 adds PrepLive tests for:
+
+- Live class scheduling and generated link shape.
+- Class list/detail/by-code reads.
+- Open/end state transitions.
+- Student access validation for batch members.
+- Capacity enforcement and join-window expiry denial.
+- Non-member student denial and unassigned teacher scheduling rejection.
+- Attendance event capture and recording metadata creation.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant live class isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-11 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

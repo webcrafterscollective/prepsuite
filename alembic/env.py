@@ -12,6 +12,7 @@ import app.modules.access.models  # noqa: F401
 import app.modules.assess.models  # noqa: F401
 import app.modules.attend.models  # noqa: F401
 import app.modules.learn.models  # noqa: F401
+import app.modules.live.models  # noqa: F401
 import app.modules.people.models  # noqa: F401
 import app.modules.question.models  # noqa: F401
 import app.modules.settings.models  # noqa: F401

@@ -84,6 +84,14 @@ PrepSuite uses a modular monolith for the main backend. Each module is a bounded
 - `app/modules/attend/router.py`: `/attend/*` API surface protected by the `prepattend` feature gate and PrepAttend RBAC permissions.
 - `alembic/versions/202604280010_prep_attend.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepAttend table.
 
+## Phase 11 Components
+
+- `app/modules/live/models.py`: live classes, participants, invites, attendance snapshots, recordings, and lifecycle events.
+- `app/modules/live/repository.py`: tenant-scoped class queries, cursor filtering, detail eager loading, participant identity lookup, and capacity counts.
+- `app/modules/live/service.py`: class scheduling, batch/course/instructor validation, link generation, live-service access validation, status transitions, attendance event capture, recording metadata, and event emission.
+- `app/modules/live/router.py`: `/live/*` API surface protected by the `preplive` feature gate and PrepLive RBAC permissions.
+- `alembic/versions/202604280011_prep_live.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepLive table.
+
 ## Clean Architecture Rules
 
 Routers orchestrate HTTP concerns only. Services own business workflows. Repositories own persistence queries. Core dependencies expose infrastructure. Domain modules remain isolated and communicate through explicit service calls or events.
@@ -105,3 +113,5 @@ PrepQuestion follows the same boundary. Question-set calculations and AI placeho
 PrepAssess is the first module that composes two mature bounded contexts. It reads PrepQuestion question sets/questions to snapshot assessment questions, validates optional PrepStudents batch/student ownership, and keeps assessment workflow state inside the assess context. Attempt timing, idempotency, scoring, and result-publication rules stay in the service layer. Repositories remain SQL-only, and routers continue to expose dependency injection, permission checks, and OpenAPI-friendly endpoint names.
 
 PrepAttend composes PrepStudents and PrepPeople while owning operational attendance state. Student attendance validates active batch membership before records are marked. Employee attendance validates employee ownership before check-in/check-out writes. Correction requests are modeled as explicit workflow records so direct changes and approved corrections remain distinguishable for future audit integration.
+
+PrepLive composes PrepStudents, PrepPeople, and PrepLearn while keeping classroom runtime concerns outside the main backend. The main service owns scheduling, ownership validation, class-code links, join-window and capacity enforcement, and the access-validation contract used by the future standalone live service. Participant runtime state is limited to attendance-oriented joins/leaves, snapshots, events, and recording metadata.
