@@ -65,6 +65,8 @@ Phase 10 adds PrepAttend: student attendance sessions and records, employee chec
 
 Phase 11 adds PrepLive main backend: live class scheduling, class-code link generation, batch/teacher validation, live-service access validation, capacity and join-window checks, attendance event capture, recording metadata, app gates, RBAC, and RLS-backed tenant isolation.
 
+Phase 14 wires the live-class end-to-end contract across the main backend, standalone Live API, and mediasoup SFU service. The main backend now includes a `LiveRuntimeClient` for future runtime calls and documents access validation, SFU room creation, attendance sync, and failure handling.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
 See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.
@@ -76,3 +78,4 @@ See `docs/phase-08-prepquestion.md` for the question-bank model, APIs, and test 
 See `docs/phase-09-prepassess.md` for the assessment model, APIs, and test coverage.
 See `docs/phase-10-prepattend.md` for the attendance model, APIs, and test coverage.
 See `docs/phase-11-preplive.md` for the live scheduling model, APIs, and test coverage.
+See `docs/phase-14-live-e2e.md` for the cross-service live-class sequence, contracts, and failure handling.

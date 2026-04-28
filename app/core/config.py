@@ -58,6 +58,9 @@ class Settings(BaseSettings):
     login_rate_limit_attempts: int = 5
     login_rate_limit_window_seconds: int = 300
 
+    live_api_url: str = "http://localhost:8010"
+    live_api_timeout_seconds: float = 10.0
+
     @property
     def resolved_celery_broker_url(self) -> str:
         return self.celery_broker_url or self.redis_url

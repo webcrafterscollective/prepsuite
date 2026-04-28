@@ -218,6 +218,8 @@ All PrepLive endpoints require the `preplive` tenant app to be enabled. Class re
 | `POST` | `/api/v1/live/classes/{live_class_id}/attendance-events` | Capture live participant joined/left events and optional attendance snapshots. |
 | `POST` | `/api/v1/live/classes/{live_class_id}/recordings` | Attach recording metadata for a completed or processing class. |
 
+The standalone Live API calls `validate-access` before creating a runtime room. On successful join it syncs `live.participant.joined`; on leave/end it syncs `live.participant.left` and may include a final snapshot. The main backend exposes `LiveRuntimeClient` for future server-side runtime calls to `http://localhost:8010`.
+
 ## Error Shape
 
 ```json
