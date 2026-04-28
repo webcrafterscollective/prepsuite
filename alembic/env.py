@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 import app.modules.access.models  # noqa: F401
 import app.modules.learn.models  # noqa: F401
 import app.modules.people.models  # noqa: F401
+import app.modules.question.models  # noqa: F401
 import app.modules.settings.models  # noqa: F401
 import app.modules.students.models  # noqa: F401
 import app.modules.tenancy.models  # noqa: F401

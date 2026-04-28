@@ -16,6 +16,7 @@ from app.core.logging import RequestIDMiddleware, StructuredAccessLogMiddleware,
 from app.modules.access.router import router as access_router
 from app.modules.learn.router import router as learn_router
 from app.modules.people.router import router as people_router
+from app.modules.question.router import router as question_router
 from app.modules.settings.router import router as settings_router
 from app.modules.students.router import router as students_router
 from app.modules.tenancy.router import platform_router, tenant_router
@@ -96,6 +97,7 @@ def create_app(
     app.include_router(access_router, prefix=current_settings.api_v1_prefix)
     app.include_router(learn_router, prefix=current_settings.api_v1_prefix)
     app.include_router(people_router, prefix=current_settings.api_v1_prefix)
+    app.include_router(question_router, prefix=current_settings.api_v1_prefix)
     app.include_router(settings_router, prefix=current_settings.api_v1_prefix)
     app.include_router(students_router, prefix=current_settings.api_v1_prefix)
     app.include_router(platform_router, prefix=current_settings.api_v1_prefix)

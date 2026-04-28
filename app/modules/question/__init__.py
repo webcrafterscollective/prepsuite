@@ -1,1 +1,1 @@
-"""PrepQuestion module placeholder."""
+"""PrepQuestion bounded context."""

@@ -142,6 +142,28 @@ All PrepLearn endpoints require the `preplearn` tenant app to be enabled. Course
 | `POST` | `/api/v1/learn/courses/{course_id}/assign-teacher` | Assign a teacher employee to a course. |
 | `GET` | `/api/v1/learn/courses/{course_id}/outline` | Return a student-facing course outline view. |
 
+## PrepQuestion Endpoints
+
+All PrepQuestion endpoints require the `prepquestion` tenant app to be enabled. Reads require `prepquestion.question.read`, question/topic writes require `prepquestion.question.manage`, question-set workflows require `prepquestion.question_set.manage`, and AI generation workflows require `prepquestion.ai_generation.manage`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/questions/topics` | List active question topics with optional search. |
+| `POST` | `/api/v1/questions/topics` | Create a tenant-unique question topic slug. |
+| `GET` | `/api/v1/questions` | Cursor-paginated question list with status, difficulty, type, topic, tag, search, and sort filters. |
+| `POST` | `/api/v1/questions` | Create a question with options and tags. |
+| `GET` | `/api/v1/questions/{question_id}` | Fetch one question with options and tags. |
+| `PATCH` | `/api/v1/questions/{question_id}` | Update question content, metadata, options, tags, or workflow status. |
+| `POST` | `/api/v1/question-sets` | Create a question set. |
+| `GET` | `/api/v1/question-sets` | Cursor-paginated question-set list. |
+| `GET` | `/api/v1/question-sets/{question_set_id}` | Fetch a question-set aggregate with ordered items. |
+| `POST` | `/api/v1/question-sets/{question_set_id}/items` | Add a question to a set and recalculate marks/distributions. |
+| `PATCH` | `/api/v1/question-sets/{question_set_id}/reorder` | Reorder question-set items with uniqueness-safe two-step updates. |
+| `DELETE` | `/api/v1/question-sets/{question_set_id}/items/{item_id}` | Remove a question-set item and recalculate aggregate fields. |
+| `POST` | `/api/v1/questions/ai-generation-jobs` | Create an AI generation metadata job using the placeholder provider. |
+| `GET` | `/api/v1/questions/ai-generation-jobs/{job_id}` | Fetch AI generation job metadata and provider-neutral output. |
+| `POST` | `/api/v1/questions/ai-generation-jobs/{job_id}/approve` | Save selected generated candidates into the question bank. |
+
 ## Error Shape
 
 ```json

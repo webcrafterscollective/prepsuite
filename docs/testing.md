@@ -79,6 +79,17 @@ Phase 7 adds PrepLearn tests for:
 - Student-facing outline response.
 - Disabled app rejection, permission denial for users without a role, and cross-tenant course isolation.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-7 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 8 adds PrepQuestion tests for:
+
+- Topic creation and duplicate slug conflict handling.
+- Question option validation for MCQ correctness rules.
+- Question creation with metadata, options, and normalized tags.
+- Question status workflow from draft to reviewed to approved.
+- Question filtering by search, status, and tag.
+- Question-set creation, item add, duplicate prevention, aggregate marks/distributions, and reorder.
+- AI generation placeholder job creation and selected candidate approval.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant question isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-8 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

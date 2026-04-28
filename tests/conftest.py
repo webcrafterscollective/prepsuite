@@ -24,6 +24,13 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "ai_question_generation_jobs",
+    "question_set_items",
+    "question_sets",
+    "question_tags",
+    "question_options",
+    "questions",
+    "question_topics",
     "course_prerequisites",
     "course_publish_history",
     "course_teachers",

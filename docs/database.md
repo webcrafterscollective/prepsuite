@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables.
 
 ## Connection
 
@@ -99,6 +99,16 @@ The Phase 7 revision creates:
 - `course_publish_history`
 - `course_prerequisites`
 
+The Phase 8 revision creates:
+
+- `question_topics`
+- `questions`
+- `question_options`
+- `question_tags`
+- `question_sets`
+- `question_set_items`
+- `ai_question_generation_jobs`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -147,3 +157,15 @@ PrepLearn tenant-owned tables use the same forced RLS policy. The key relationsh
 - `course_prerequisites.course_id -> courses.id` and `prerequisite_course_id -> courses.id`.
 
 PrepLearn services validate cross-module ownership in the application layer before writing assignment rows. Course publishing requires at least one active module and at least one active lesson in every module.
+
+PrepQuestion tenant-owned tables use the same forced RLS policy. The key relationships are:
+
+- `question_topics.tenant_id -> tenants.id`, optional self-parent, and tenant-unique `slug`.
+- `questions.topic_id -> question_topics.id`, JSON `metadata`, options/tags relationships, and soft delete.
+- `question_options.question_id -> questions.id`, tenant-scoped unique option ordering.
+- `question_tags.question_id -> questions.id`, tenant-scoped unique tag names per question.
+- `question_sets.tenant_id -> tenants.id`, tenant-unique title, JSON difficulty/topic distributions, total marks, and soft delete.
+- `question_set_items.question_set_id -> question_sets.id` and `question_id -> questions.id`, unique question membership, and unique ordering per set.
+- `ai_question_generation_jobs.tenant_id -> tenants.id`, requested user UUID, provider-neutral output JSON, and review timestamp.
+
+PrepQuestion services validate option correctness by question type, enforce status transitions, recalculate question-set aggregate marks/distributions, and keep AI integration provider-neutral until a real provider is selected.
