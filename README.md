@@ -1,6 +1,6 @@
 # PrepSuite Backend
 
-PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, PrepLearn curriculum management, and PrepQuestion question-bank workflows.
+PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, PrepLearn curriculum management, PrepQuestion question-bank workflows, and PrepAssess assessment/evaluation workflows.
 
 ## Stack
 
@@ -59,6 +59,8 @@ Phase 7 adds PrepLearn: courses, modules, lessons, lesson resources, course-batc
 
 Phase 8 adds PrepQuestion: question topics, question bank records, options, tags, question sets, set-item ordering, AI generation job metadata with placeholder generation, review/approval flows, app gates, RBAC, and RLS-backed tenant isolation.
 
+Phase 9 adds PrepAssess: assessments created from question sets, sections, assessment questions, student attempts, idempotent answer submission, MCQ auto-evaluation, manual evaluation, result publishing, analytics, app gates, RBAC, and RLS-backed tenant isolation.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
 See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.
@@ -67,3 +69,4 @@ See `docs/phase-05-prepstudents.md` for the student lifecycle model, APIs, and t
 See `docs/phase-06-preppeople.md` for the employee/teacher operations model, APIs, and test coverage.
 See `docs/phase-07-preplearn.md` for the curriculum model, APIs, and test coverage.
 See `docs/phase-08-prepquestion.md` for the question-bank model, APIs, and test coverage.
+See `docs/phase-09-prepassess.md` for the assessment model, APIs, and test coverage.

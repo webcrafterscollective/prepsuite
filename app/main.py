@@ -14,6 +14,7 @@ from app.core.database import check_database_ready, dispose_engine
 from app.core.exceptions import ErrorResponse, PrepSuiteError, install_exception_handlers
 from app.core.logging import RequestIDMiddleware, StructuredAccessLogMiddleware, configure_logging
 from app.modules.access.router import router as access_router
+from app.modules.assess.router import router as assess_router
 from app.modules.learn.router import router as learn_router
 from app.modules.people.router import router as people_router
 from app.modules.question.router import router as question_router
@@ -95,6 +96,7 @@ def create_app(
 
     app.include_router(router)
     app.include_router(access_router, prefix=current_settings.api_v1_prefix)
+    app.include_router(assess_router, prefix=current_settings.api_v1_prefix)
     app.include_router(learn_router, prefix=current_settings.api_v1_prefix)
     app.include_router(people_router, prefix=current_settings.api_v1_prefix)
     app.include_router(question_router, prefix=current_settings.api_v1_prefix)

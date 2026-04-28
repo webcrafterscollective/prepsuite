@@ -90,6 +90,16 @@ Phase 8 adds PrepQuestion tests for:
 - AI generation placeholder job creation and selected candidate approval.
 - Disabled app rejection, permission denial for users without a role, and cross-tenant question isolation.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-8 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 9 adds PrepAssess tests for:
+
+- Assessment creation from a PrepQuestion question set.
+- Cursor list filtering by search and status.
+- Scheduling, publishing, attempt start, and attempt idempotency.
+- Idempotent answer submission and replay.
+- MCQ auto-evaluation and manual short-answer evaluation.
+- Evaluation queue, result publishing, and assessment analytics.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant assessment isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-9 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables. Phase 9 adds PrepAssess assessment and evaluation tables.
 
 ## Connection
 
@@ -109,6 +109,18 @@ The Phase 8 revision creates:
 - `question_set_items`
 - `ai_question_generation_jobs`
 
+The Phase 9 revision creates:
+
+- `assessments`
+- `assessment_sections`
+- `assessment_questions`
+- `assessment_attempts`
+- `assessment_answers`
+- `assessment_evaluations`
+- `assessment_results`
+- `assignment_submissions`
+- `evaluation_comments`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -169,3 +181,17 @@ PrepQuestion tenant-owned tables use the same forced RLS policy. The key relatio
 - `ai_question_generation_jobs.tenant_id -> tenants.id`, requested user UUID, provider-neutral output JSON, and review timestamp.
 
 PrepQuestion services validate option correctness by question type, enforce status transitions, recalculate question-set aggregate marks/distributions, and keep AI integration provider-neutral until a real provider is selected.
+
+PrepAssess tenant-owned tables use the same forced RLS policy. The key relationships are:
+
+- `assessments.tenant_id -> tenants.id`, optional `course_id -> courses.id`, optional `batch_id -> batches.id`, optional `question_set_id -> question_sets.id`, optional `created_by -> users.id`, JSON `settings`, status, schedule window, and soft delete.
+- `assessment_sections.assessment_id -> assessments.id`, tenant-scoped unique `(assessment_id, order_index)`, and section-level total marks.
+- `assessment_questions.assessment_id -> assessments.id`, optional `section_id -> assessment_sections.id`, `question_id -> questions.id`, tenant-scoped unique `(assessment_id, order_index)`, mark overrides, and JSON `metadata`.
+- `assessment_attempts.assessment_id -> assessments.id` and `student_id -> students.id`, unique `(tenant_id, assessment_id, student_id)`, score, status, and JSON `metadata`.
+- `assessment_answers.attempt_id -> assessment_attempts.id`, `assessment_question_id -> assessment_questions.id`, `question_id -> questions.id`, JSON `answer`, evaluation status, score, and optional idempotency key.
+- `assessment_evaluations.attempt_id -> assessment_attempts.id`, optional evaluator UUID, total score, evaluated timestamp, and JSON `metadata`.
+- `assessment_results.assessment_id -> assessments.id`, `student_id -> students.id`, `attempt_id -> assessment_attempts.id`, unique `(tenant_id, assessment_id, student_id)`, percentage, status, and publish timestamp.
+- `assignment_submissions.assessment_id -> assessments.id`, `student_id -> students.id`, optional `attempt_id -> assessment_attempts.id`, JSON content, storage key, and status.
+- `evaluation_comments.answer_id -> assessment_answers.id`, optional `evaluation_id -> assessment_evaluations.id`, author UUID, visibility, and comment text.
+
+PrepAssess services snapshot question-set membership into `assessment_questions`, validate schedule/publish preconditions, enforce student ownership and optional batch membership before attempts, support idempotent answer submissions, auto-score objective question types, and publish results only after evaluated result rows exist.

@@ -24,6 +24,15 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "evaluation_comments",
+    "assignment_submissions",
+    "assessment_results",
+    "assessment_evaluations",
+    "assessment_answers",
+    "assessment_attempts",
+    "assessment_questions",
+    "assessment_sections",
+    "assessments",
     "ai_question_generation_jobs",
     "question_set_items",
     "question_sets",

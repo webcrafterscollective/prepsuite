@@ -1,1 +1,1 @@
-"""PrepAssess module placeholder."""
+"""PrepAssess bounded context."""

@@ -68,6 +68,14 @@ PrepSuite uses a modular monolith for the main backend. Each module is a bounded
 - `app/modules/question/router.py`: `/questions/*` and `/question-sets/*` API surface protected by the `prepquestion` feature gate and PrepQuestion RBAC permissions.
 - `alembic/versions/202604280008_prep_question.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepQuestion table.
 
+## Phase 9 Components
+
+- `app/modules/assess/models.py`: assessments, sections, assessment questions, attempts, answers, evaluations, results, assignment submissions, and evaluation comments.
+- `app/modules/assess/repository.py`: tenant-scoped assessment queries, cursor pagination, eager-loaded detail reads, attempt lookup, answer lookup, pending evaluation queue, and result lookup.
+- `app/modules/assess/service.py`: assessment creation from question sets, scheduling, publishing, attempt timing and student-access checks, idempotent answer submission, MCQ auto-evaluation, manual evaluation, result publishing, analytics, and event emission.
+- `app/modules/assess/router.py`: `/assessments/*` and `/assessment-*/*` API surface protected by the `prepassess` feature gate and PrepAssess RBAC permissions.
+- `alembic/versions/202604280009_prep_assess.py`: table creation plus forced PostgreSQL RLS policies for every tenant-owned PrepAssess table.
+
 ## Clean Architecture Rules
 
 Routers orchestrate HTTP concerns only. Services own business workflows. Repositories own persistence queries. Core dependencies expose infrastructure. Domain modules remain isolated and communicate through explicit service calls or events.
@@ -85,3 +93,5 @@ PrepPeople follows the same boundary. The service validates optional PrepAccess 
 PrepLearn now owns course UUIDs and curriculum structure. PrepStudents and PrepPeople remain decoupled through explicit assignment tables: batch ownership is validated against PrepStudents, teacher ownership is validated against PrepPeople, and route handlers still never reach across bounded contexts directly. PrepLearn service methods assemble read DTOs before committing when PostgreSQL RLS transaction-local tenant settings would otherwise be cleared.
 
 PrepQuestion follows the same boundary. Question-set calculations and AI placeholder workflows live in the service layer; repositories never make permission or workflow decisions. The AI generation provider is an interface-first placeholder, so a real provider can be introduced later without changing API contracts or persistence ownership.
+
+PrepAssess is the first module that composes two mature bounded contexts. It reads PrepQuestion question sets/questions to snapshot assessment questions, validates optional PrepStudents batch/student ownership, and keeps assessment workflow state inside the assess context. Attempt timing, idempotency, scoring, and result-publication rules stay in the service layer. Repositories remain SQL-only, and routers continue to expose dependency injection, permission checks, and OpenAPI-friendly endpoint names.

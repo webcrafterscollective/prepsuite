@@ -164,6 +164,26 @@ All PrepQuestion endpoints require the `prepquestion` tenant app to be enabled. 
 | `GET` | `/api/v1/questions/ai-generation-jobs/{job_id}` | Fetch AI generation job metadata and provider-neutral output. |
 | `POST` | `/api/v1/questions/ai-generation-jobs/{job_id}/approve` | Save selected generated candidates into the question bank. |
 
+## PrepAssess Endpoints
+
+All PrepAssess endpoints require the `prepassess` tenant app to be enabled. The app code keeps the existing catalog spelling for compatibility. Assessment reads require `prepassess.assessment.read`, creation requires `prepassess.assessment.create`, updates require `prepassess.assessment.update`, scheduling requires `prepassess.assessment.schedule`, publishing requires `prepassess.assessment.publish`, attempt/answer workflows require `prepassess.attempt.manage`, manual evaluation requires `prepassess.evaluation.manage`, and result publishing requires `prepassess.result.publish`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/assessments` | Cursor-paginated assessment list with status, type, course, batch, search, and sort filters. |
+| `POST` | `/api/v1/assessments` | Create an assessment, optionally from a PrepQuestion question set. |
+| `GET` | `/api/v1/assessments/{assessment_id}` | Fetch an assessment aggregate with sections and assessment questions. |
+| `PATCH` | `/api/v1/assessments/{assessment_id}` | Update draft or scheduled assessment metadata and timing. |
+| `POST` | `/api/v1/assessments/{assessment_id}/schedule` | Schedule an assessment after validating that questions exist. |
+| `POST` | `/api/v1/assessments/{assessment_id}/publish` | Publish an assessment to live availability. |
+| `POST` | `/api/v1/assessments/{assessment_id}/attempts/start` | Start or idempotently fetch a student attempt. |
+| `POST` | `/api/v1/assessment-attempts/{attempt_id}/answers` | Submit one answer with idempotency-key replay support. |
+| `POST` | `/api/v1/assessment-attempts/{attempt_id}/submit` | Submit or auto-submit an attempt and finalize if all answers are evaluated. |
+| `GET` | `/api/v1/assessments/{assessment_id}/evaluation-queue` | List pending manual-evaluation answers. |
+| `POST` | `/api/v1/assessment-answers/{answer_id}/evaluate` | Manually score an answer and add an optional evaluation comment. |
+| `POST` | `/api/v1/assessments/{assessment_id}/results/publish` | Publish evaluated student results and mark the assessment published. |
+| `GET` | `/api/v1/assessments/{assessment_id}/analytics` | Return assessment attempt, result, and score aggregates. |
+
 ## Error Shape
 
 ```json
