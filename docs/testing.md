@@ -100,6 +100,14 @@ Phase 9 adds PrepAssess tests for:
 - Evaluation queue, result publishing, and assessment analytics.
 - Disabled app rejection, permission denial for users without a role, and cross-tenant assessment isolation.
 
-The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-9 tables from the owner connection, then exercises the API through the non-superuser app role.
+Phase 10 adds PrepAttend tests for:
+
+- Student attendance session creation and bulk record marking.
+- Student attendance summaries by batch and student.
+- Student correction request creation, approval, and approved-status application.
+- Employee check-in idempotency, check-out, summary counts, and work seconds.
+- Disabled app rejection, permission denial for users without a role, and cross-tenant attendance isolation.
+
+The PostgreSQL Testcontainers fixture now lives at `tests/conftest.py` and is shared across module tests. Each integration test truncates all current Phase 1-10 tables from the owner connection, then exercises the API through the non-superuser app role.
 
 Future phases will extend this setup for feature gates, workers, and live flows.

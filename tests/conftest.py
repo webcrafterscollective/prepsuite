@@ -24,6 +24,11 @@ from app.core.database import get_db_session
 from app.main import create_app
 
 TEST_TABLES = (
+    "attendance_correction_requests",
+    "employee_attendance_records",
+    "student_attendance_records",
+    "attendance_policies",
+    "student_attendance_sessions",
     "evaluation_comments",
     "assignment_submissions",
     "assessment_results",

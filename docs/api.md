@@ -184,6 +184,22 @@ All PrepAssess endpoints require the `prepassess` tenant app to be enabled. The 
 | `POST` | `/api/v1/assessments/{assessment_id}/results/publish` | Publish evaluated student results and mark the assessment published. |
 | `GET` | `/api/v1/assessments/{assessment_id}/analytics` | Return assessment attempt, result, and score aggregates. |
 
+## PrepAttend Endpoints
+
+All PrepAttend endpoints require the `prepattend` tenant app to be enabled. Student attendance writes require `prepattend.student.manage`, employee attendance writes require `prepattend.employee.manage`, summaries require `prepattend.attendance.read`, and correction workflows require `prepattend.correction.manage`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/attend/student-sessions` | Create a batch-scoped student attendance session for a date. |
+| `POST` | `/api/v1/attend/student-sessions/{session_id}/records` | Bulk create or update student attendance records for a session. |
+| `PATCH` | `/api/v1/attend/student-records/{record_id}` | Update one student attendance record. |
+| `GET` | `/api/v1/attend/students/summary` | Summarize student attendance by date range, optional batch, and optional student. |
+| `POST` | `/api/v1/attend/employees/check-in` | Create an idempotent employee check-in record. |
+| `POST` | `/api/v1/attend/employees/check-out` | Update an employee attendance record with check-out details. |
+| `GET` | `/api/v1/attend/employees/summary` | Summarize employee attendance and work seconds by date range. |
+| `POST` | `/api/v1/attend/correction-requests` | Create a student or employee attendance correction request. |
+| `POST` | `/api/v1/attend/correction-requests/{correction_id}/approve` | Approve or reject a correction request and apply approved status changes. |
+
 ## Error Shape
 
 ```json

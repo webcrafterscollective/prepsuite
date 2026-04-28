@@ -1,6 +1,6 @@
 # Database
 
-Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables. Phase 9 adds PrepAssess assessment and evaluation tables.
+Phase 1 configures SQLAlchemy 2.x async ORM and Alembic. Phase 2 adds the tenant foundation and PostgreSQL RLS. Phase 3 adds PrepAccess identity, RBAC, and auth-token tables. Phase 4 adds PrepSettings configuration tables. Phase 5 adds PrepStudents lifecycle tables. Phase 6 adds PrepPeople employee and teacher operations tables. Phase 7 adds PrepLearn curriculum tables. Phase 8 adds PrepQuestion question-bank tables. Phase 9 adds PrepAssess assessment and evaluation tables. Phase 10 adds PrepAttend attendance operation tables.
 
 ## Connection
 
@@ -121,6 +121,14 @@ The Phase 9 revision creates:
 - `assignment_submissions`
 - `evaluation_comments`
 
+The Phase 10 revision creates:
+
+- `student_attendance_sessions`
+- `student_attendance_records`
+- `employee_attendance_records`
+- `attendance_correction_requests`
+- `attendance_policies`
+
 RLS is enabled and forced on tenant-owned tables. The policy pattern is:
 
 ```sql
@@ -195,3 +203,13 @@ PrepAssess tenant-owned tables use the same forced RLS policy. The key relations
 - `evaluation_comments.answer_id -> assessment_answers.id`, optional `evaluation_id -> assessment_evaluations.id`, author UUID, visibility, and comment text.
 
 PrepAssess services snapshot question-set membership into `assessment_questions`, validate schedule/publish preconditions, enforce student ownership and optional batch membership before attempts, support idempotent answer submissions, auto-score objective question types, and publish results only after evaluated result rows exist.
+
+PrepAttend tenant-owned tables use the same forced RLS policy. The key relationships are:
+
+- `student_attendance_sessions.tenant_id -> tenants.id`, `batch_id -> batches.id`, optional future-compatible `course_id` and `live_class_id`, attendance date, marker UUID, status, submitted timestamp, and JSON metadata.
+- `student_attendance_records.session_id -> student_attendance_sessions.id`, `student_id -> students.id`, tenant-scoped unique `(session_id, student_id)`, attendance status, marker UUID, marked timestamp, remarks, and JSON metadata.
+- `employee_attendance_records.employee_id -> employees.id`, tenant-scoped unique `(employee_id, date)`, check-in/out timestamps, status, source, marker UUID, optional idempotency key, remarks, and JSON metadata.
+- `attendance_correction_requests` points to either a student record or employee record, tracks requested status, reason, review status, reviewer UUID, reviewed timestamp, reviewer note, and JSON metadata.
+- `attendance_policies.tenant_id -> tenants.id`, tenant-unique `code`, scope, minimum percentage, late/absent thresholds, JSON settings, status, default flag, and soft delete.
+
+PrepAttend services validate active student batch membership before marking student records, validate employee ownership before check-in/check-out, replay employee check-in idempotency keys, and apply approved corrections through explicit correction workflow records.

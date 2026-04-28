@@ -1,6 +1,6 @@
 # PrepSuite Backend
 
-PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, PrepLearn curriculum management, PrepQuestion question-bank workflows, and PrepAssess assessment/evaluation workflows.
+PrepSuite is a production-grade, multi-tenant learning management SaaS backend. The current backend includes the service bootstrap, PostgreSQL RLS tenant foundation, PrepAccess authentication/RBAC, PrepSettings, student lifecycle, employee/teacher operations, PrepLearn curriculum management, PrepQuestion question-bank workflows, PrepAssess assessment/evaluation workflows, and PrepAttend attendance operations.
 
 ## Stack
 
@@ -61,6 +61,8 @@ Phase 8 adds PrepQuestion: question topics, question bank records, options, tags
 
 Phase 9 adds PrepAssess: assessments created from question sets, sections, assessment questions, student attempts, idempotent answer submission, MCQ auto-evaluation, manual evaluation, result publishing, analytics, app gates, RBAC, and RLS-backed tenant isolation.
 
+Phase 10 adds PrepAttend: student attendance sessions and records, employee check-in/check-out, correction request approval, summaries, policies storage, app gates, RBAC, and RLS-backed tenant isolation.
+
 See `docs/phase-01-bootstrap.md` for the implementation map and review checklist.
 See `docs/phase-02-multi-tenancy-rls.md` for the tenancy model, API, and RLS contract.
 See `docs/phase-03-prepaccess-auth-rbac.md` for the authentication and RBAC contract.
@@ -70,3 +72,4 @@ See `docs/phase-06-preppeople.md` for the employee/teacher operations model, API
 See `docs/phase-07-preplearn.md` for the curriculum model, APIs, and test coverage.
 See `docs/phase-08-prepquestion.md` for the question-bank model, APIs, and test coverage.
 See `docs/phase-09-prepassess.md` for the assessment model, APIs, and test coverage.
+See `docs/phase-10-prepattend.md` for the attendance model, APIs, and test coverage.

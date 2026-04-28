@@ -1,1 +1,1 @@
-"""PrepAttend module placeholder."""
+"""PrepAttend bounded context."""
